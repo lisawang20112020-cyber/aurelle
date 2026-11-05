@@ -237,6 +237,100 @@
     return "AR-" + ymd + "-" + String(Math.floor(1000 + Math.random() * 9000));
   }
 
+  /* ------------------------------------------------------------- payment gateway */
+  function loadPaypal(clientId, currency) {
+    if (window.paypal && window.paypal.Buttons) return Promise.resolve(window.paypal);
+    var loaded = document.querySelector("script[data-paypal-sdk]");
+    if (loaded) {
+      return new Promise(function (resolve, reject) {
+        if (window.paypal && window.paypal.Buttons) return resolve(window.paypal);
+        loaded.addEventListener("load", function () { resolve(window.paypal); });
+        loaded.addEventListener("error", function () { reject(new Error("sdk")); });
+      });
+    }
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement("script");
+      s.src = "https://www.paypal.com/sdk/js?client-id=" + encodeURIComponent(clientId) +
+        "&currency=" + encodeURIComponent(currency) + "&components=buttons&intent=capture";
+      s.setAttribute("data-paypal-sdk", "1");
+      s.onload = function () { resolve(window.paypal); };
+      s.onerror = function () { reject(new Error("sdk")); };
+      document.head.appendChild(s);
+    });
+  }
+
+  function note(host, text) {
+    var p = el("p", "sum-note");
+    p.style.margin = ".7rem 0 0";
+    p.textContent = text;
+    host.appendChild(p);
+  }
+
+  /* Renders the "pay now" block on the confirmation page according to CFG.payments.mode. */
+  function renderPayNow(panel, ref, items, method) {
+    var host = panel.querySelector("[data-pay-now]");
+    if (!host) return;
+    host.innerHTML = "";
+    host.hidden = true;
+    if (method === "offline") return;
+
+    var pay = CFG.payments || {};
+    var mode = pay.mode || "payment-link";
+    var total = subtotal(items);
+    var currency = CFG.currency || "USD";
+    var amount = Number(total).toFixed(2);
+
+    if (mode === "paypal" && pay.paypalClientId) {
+      host.hidden = false;
+      loadPaypal(pay.paypalClientId, currency).then(function (pp) {
+        if (!pp || !pp.Buttons) throw new Error("no buttons");
+        pp.Buttons({
+          style: { layout: "vertical", shape: "rect", color: "gold", label: "paypal", height: 46 },
+          createOrder: function (data, actions) {
+            return actions.order.create({
+              purchase_units: [{
+                reference_id: ref,
+                description: "AURELLE order " + ref,
+                amount: { value: amount, currency_code: currency }
+              }],
+              application_context: { shipping_preference: "NO_SHIPPING" }
+            });
+          },
+          onApprove: function (data, actions) {
+            return actions.order.capture().then(function (details) {
+              host.innerHTML = "";
+              note(host, t("paid") + " — " + (details && details.id ? details.id : ref));
+              toast(t("paid"));
+            });
+          },
+          onError: function () { toast(t("payFail")); }
+        }).render(host);
+        note(host, t("payNowNote"));
+      }).catch(function () { note(host, t("payUnavailable")); });
+      return;
+    }
+
+    var href = "";
+    if (mode === "paypal-me" && pay.paypalMeHandle) {
+      var handle = String(pay.paypalMeHandle).replace(/^@/, "");
+      href = "https://www.paypal.com/paypalme/" + encodeURIComponent(handle) + "/" + amount + currency;
+    } else if (mode === "stripe" && pay.stripePaymentLink) {
+      href = pay.stripePaymentLink + (pay.stripePaymentLink.indexOf("?") >= 0 ? "&" : "?") +
+        "client_reference_id=" + encodeURIComponent(ref);
+    }
+    if (!href) return;
+
+    host.hidden = false;
+    var a = el("a", "btn", pay.payNowLabel || t("payNow"));
+    a.href = href;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.style.display = "inline-block";
+    a.style.marginTop = "1rem";
+    host.appendChild(a);
+    note(host, t("payNowNote"));
+  }
+
   function initCheckout() {
     var form = document.querySelector("[data-checkout-form]");
     if (!form) return;
@@ -351,6 +445,8 @@
       if (onlineP) onlineP.hidden = method === "offline";
       var offlineP = panel.querySelector("[data-confirm-offline]");
       if (offlineP) offlineP.hidden = method !== "offline";
+
+      renderPayNow(panel, ref, items, method);
 
       var text = orderText(ref, data, items, method);
       var mail = panel.querySelector("[data-send-email]");

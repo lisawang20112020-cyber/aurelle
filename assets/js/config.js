@@ -11,15 +11,19 @@ window.AURELLE_CONFIG = {
 
   currency: "USD",
 
-  /* Online payment
-     mode: "payment-link" -> order is placed, we email a secure payment link / invoice
-     The paypalClientId / stripePaymentLink fields are placeholders: the site keeps
-     collecting orders and sending a payment link until a gateway is wired into
-     site.js (checkout confirmation step). */
+  /* Online payment — choose ONE mode and fill in the field it needs.
+       "payment-link" : order is placed, we email a secure payment link / invoice (default)
+       "paypal"       : PayPal Smart Buttons on the confirmation page, amount from the bag
+       "paypal-me"    : PayPal.me link with the amount prefilled (no client ID needed)
+       "stripe"       : fixed-price Stripe Payment Link — a link carries ONE price, so it only
+                        fits a single set; see README for the card alternative.
+     Nothing is charged until the customer pays; no card data ever touches this site. */
   payments: {
     mode: "payment-link",
-    paypalClientId: "",
-    stripePaymentLink: ""
+    paypalClientId: "",        // PayPal: client ID from developer.paypal.com
+    paypalMeHandle: "",        // PayPal.me: your handle, e.g. "aurelle" -> paypal.me/aurelle
+    stripePaymentLink: "",     // Stripe: https://buy.stripe.com/...
+    payNowLabel: ""            // optional button text override
   },
 
   /* Offline payment — same accounts as JINHUA LI ELECTRIC TRADING CO., LTD */
