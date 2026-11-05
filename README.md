@@ -1,85 +1,50 @@
-# AURELLE storefront — aurelle.com.cn
+# AURELLE storefront
 
-Static jewellery store in three languages (English / 中文 / Español). No build step is
-needed to publish: every page is plain HTML plus shared CSS/JS, so any static host works
-(GitHub Pages, Netlify, a normal web server). Prices come from `价格连接.xlsx` (USD sell
-price), company and bank details follow JINHUA LI ELECTRIC TRADING CO., LTD.
+Static jewellery store, three languages (English / 中文 / Español), built for GitHub Pages
+or any plain web host. No build step is needed to publish — upload the whole folder.
 
-## Publish with GitHub Pages
+## Publish
 
-1. Create a repository and upload **everything in this folder** to the repository root —
-   `index.html` must sit at the root, together with `CNAME`, `.nojekyll`, `robots.txt`
-   and `sitemap.xml`.
-2. GitHub → Settings → Pages → Source: `Deploy from a branch`, branch `main`, folder `/ (root)`.
-3. Custom domain: `aurelle.com.cn`, then tick **Enforce HTTPS**.
-4. DNS at your registrar:
-   - `aurelle.com.cn` → A records `185.199.108.153`, `185.199.109.153`,
-     `185.199.110.153`, `185.199.111.153`
-   - optional `www` → CNAME `your-username.github.io`
-5. Wait for the certificate, then open `https://aurelle.com.cn` and check all three
-   languages: `/`, `/zh/`, `/es/`.
+1. Upload everything in this folder to the repository root (keep `CNAME`, `.nojekyll`,
+   `robots.txt`, `sitemap.xml`).
+2. GitHub → Settings → Pages → Custom domain: `aurelle.com.cn`, then tick Enforce HTTPS.
+3. DNS: `aurelle.com.cn` needs A records to GitHub Pages (185.199.108.153, .109.153,
+   .110.153, .111.153) or a CNAME if you switch the canonical to `www.aurelle.com.cn`.
+4. In Google Search Console add the domain property and submit
+   `https://aurelle.com.cn/sitemap.xml`.
 
-## Get indexed by Google
+## Change the domain
 
-1. Google Search Console → add a **Domain** property for `aurelle.com.cn`, verify with the
-   DNS TXT record.
-2. Sitemaps → submit `https://aurelle.com.cn/sitemap.xml` (39 URLs, all three languages).
-3. Use URL Inspection on `https://aurelle.com.cn/` and request indexing; the Chinese and
-   Spanish home pages are linked with `hreflang`, so Google picks them up from there.
-4. Optional: Bing Webmaster Tools accepts the same sitemap.
+The canonical / hreflang / sitemap URLs all come from one constant. Edit `BASE` in
+`build/content.py` (and `baseUrl` in `assets/js/config.js`), then run:
 
-Note: `aurelle.com.cn` is a mainland-China domain. If the site is hosted outside China it
-will load normally worldwide; if you later host it inside China, an ICP filing is required.
+    python build/build_site.py
 
-## Shop structure
+## Products, prices, copy
 
-| Path | Content |
-| --- | --- |
-| `/` `/zh/` `/es/` | home page per language |
-| `/collections/earrings.html` etc. | E / H / N collections |
-| `/products/e01.html` … `n01.html` | six product pages with gallery, specs, variants |
-| `/cart.html`, `/checkout.html` | bag and order form |
-| `/about.html`, `/contact.html`, `/shipping.html` | brand, contact, shipping & payment |
-| `/404.html`, `/zh/404.html`, `/es/404.html` | not-found pages |
-
-Every page carries its own title, description, canonical, `hreflang` (en / zh-Hans / es /
-x-default) and Product or Organization structured data. `robots.txt` keeps `cart` and
-`checkout` out of the index.
+`build/content.py` holds the six products (code, USD price, specs and copy in three
+languages); `build/ui.py` holds interface wording. Re-run `build/build_site.py` after edits.
+Images live in `assets/img/products/<code>/` — `cover.jpg` plus `g1…g8.jpg`.
 
 ## Payments
 
-`assets/js/config.js` holds every setting an owner may need:
+`assets/js/config.js`:
 
-- `payments.mode = "payment-link"` (current): the customer places the order, the shop
-  receives it by email / WhatsApp and replies with a secure PayPal or Stripe link.
-  No card data touches the site.
-- `paypalClientId` and `stripePaymentLink` are reserved placeholders. To take money
-  automatically, wire the chosen gateway into the confirmation step of
-  `assets/js/site.js` — no other file needs editing.
-- `bank`: the offline T/T account shown on checkout and on the shipping page
-  (Beneficiary / Bank / SWIFT / USD and EUR accounts, same as LI ELECTRIC).
+- `payments.mode = "payment-link"` (current default): the order is captured and the shop
+  emails a secure payment link / invoice. No card data touches the site.
+- `payments.mode = "paypal"` + `paypalClientId`: PayPal Smart Buttons appear on the
+  confirmation page and the bag total is charged (cards are accepted through PayPal too).
+  Get the client ID at developer.paypal.com → Apps & Credentials (Live).
+- `payments.mode = "paypal-me"` + `paypalMeHandle`: a PayPal.me link with the amount
+  prefilled — no client ID needed, quickest way to start taking money online.
+- `payments.mode = "stripe"` + `stripePaymentLink`: a fixed-price Payment Link. A Stripe
+  Payment Link carries ONE price, so it only matches the bag when the customer buys that
+  exact set; for a real cart total Stripe Checkout needs a small server function
+  (Cloudflare Worker / Vercel) because this site is static.
+- `bank`: the offline T/T account shown at checkout (same accounts as LI ELECTRIC).
 
-Orders are written to the customer's browser (`aurelle.orders.v1`) and sent to
-sales@lielectric.cn with the "Send order by email" button or by WhatsApp from the
-confirmation page. There is no server, so nothing is stored remotely; connect a form
-service or a payment gateway if you want orders captured automatically.
-
-## Editing content
-
-The generator scripts are kept on the shop owner's machine in `website/build/` and are
-not part of the upload package:
-
-- `build/content.py` — the six products (code, USD price, specs, three-language copy) and `BASE`
-- `build/ui.py` — interface wording in three languages
-- `build/assets.py` — logo cut-out and product image sizing
-- `build/pages.py` — regenerates all HTML, `sitemap.xml`, `robots.txt`, the catalog JS
-- `build/check_site.py` — verifies 48 pages, canonicals, hreflang, links, JSON-LD
-
-After any content change run:
-
-    python build/pages.py
-    python build/check_site.py
-
-To change the domain, edit `BASE` in `build/content.py` and `baseUrl` in
-`assets/js/config.js`, then re-run `build/pages.py` (it rewrites canonical, hreflang,
-sitemap and `CNAME`).
+Orders are stored in the customer's browser (`aurelle.orders.v1`) and are sent to
+sales@lielectric.cn by the "Send order by email" / WhatsApp buttons on the confirmation
+page. There is no server, so nothing is stored remotely — connect a form service or a
+payment gateway when you want automatic order capture. With PayPal in live mode you also
+receive the payment and the payer details in the PayPal dashboard.
