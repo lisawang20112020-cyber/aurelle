@@ -19,8 +19,8 @@ window.AURELLE_CONFIG = {
                         fits a single set; see README for the card alternative.
      Nothing is charged until the customer pays; no card data ever touches this site. */
   payments: {
-    mode: "payment-link",
-    paypalClientId: "",        // PayPal: client ID from developer.paypal.com
+    mode: "paypal",
+    paypalClientId: "BAASjcdNimP4w0osGtjXs_kZfstGDEFZQpKLqDGWHQeamwsPmKJ6bXxscj4boolw4D-ShzSYmY5u0KmDGs",
     paypalMeHandle: "",        // PayPal.me: your handle, e.g. "aurelle" -> paypal.me/aurelle
     stripePaymentLink: "",     // Stripe: https://buy.stripe.com/...
     payNowLabel: ""            // optional button text override
