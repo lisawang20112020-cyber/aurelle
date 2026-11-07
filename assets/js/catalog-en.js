@@ -90,5 +90,69 @@ window.AURELLE_CATALOG = {
     "image": null
    }
   ]
+ },
+ "E04": {
+  "name": "Micro Clover Studs",
+  "price": 10.17,
+  "image": "assets/img/products/E04/cover.jpg",
+  "url": "products/e04.html",
+  "variants": [
+   {
+    "label": "Gold plated",
+    "image": null
+   },
+   {
+    "label": "Rhodium plated",
+    "image": null
+   }
+  ]
+ },
+ "H03": {
+  "name": "Scrollwork Signet Ring",
+  "price": 27.71,
+  "image": "assets/img/products/H03/cover.jpg",
+  "url": "products/h03.html",
+  "variants": [
+   {
+    "label": "S999 solid silver",
+    "image": null
+   }
+  ]
+ },
+ "H04": {
+  "name": "Clover Hand Chain",
+  "price": 31.0,
+  "image": "assets/img/products/H04/cover.jpg",
+  "url": "products/h04.html",
+  "variants": [
+   {
+    "label": "Gold plated",
+    "image": null
+   }
+  ]
+ },
+ "N02": {
+  "name": "Turquoise Clover Necklace",
+  "price": 27.43,
+  "image": "assets/img/products/N02/cover.jpg",
+  "url": "products/n02.html",
+  "variants": [
+   {
+    "label": "Gold plated",
+    "image": null
+   }
+  ]
+ },
+ "N03": {
+  "name": "Cat's-Eye Clover Necklace",
+  "price": 34.29,
+  "image": "assets/img/products/N03/cover.jpg",
+  "url": "products/n03.html",
+  "variants": [
+   {
+    "label": "Cat's-eye stone",
+    "image": null
+   }
+  ]
  }
 };

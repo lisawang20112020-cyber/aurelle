@@ -90,5 +90,69 @@ window.AURELLE_CATALOG = {
     "image": null
    }
   ]
+ },
+ "E04": {
+  "name": "迷你四叶草耳钉",
+  "price": 10.17,
+  "image": "assets/img/products/E04/cover.jpg",
+  "url": "zh/products/e04.html",
+  "variants": [
+   {
+    "label": "镀黄金",
+    "image": null
+   },
+   {
+    "label": "镀白金",
+    "image": null
+   }
+  ]
+ },
+ "H03": {
+  "name": "古法卷草纹银戒",
+  "price": 27.71,
+  "image": "assets/img/products/H03/cover.jpg",
+  "url": "zh/products/h03.html",
+  "variants": [
+   {
+    "label": "S999 足银",
+    "image": null
+   }
+  ]
+ },
+ "H04": {
+  "name": "三叶草手链连戒",
+  "price": 31.0,
+  "image": "assets/img/products/H04/cover.jpg",
+  "url": "zh/products/h04.html",
+  "variants": [
+   {
+    "label": "镀黄金",
+    "image": null
+   }
+  ]
+ },
+ "N02": {
+  "name": "绿松石四叶草项链",
+  "price": 27.43,
+  "image": "assets/img/products/N02/cover.jpg",
+  "url": "zh/products/n02.html",
+  "variants": [
+   {
+    "label": "镀黄金",
+    "image": null
+   }
+  ]
+ },
+ "N03": {
+  "name": "猫眼石四叶草项链",
+  "price": 34.29,
+  "image": "assets/img/products/N03/cover.jpg",
+  "url": "zh/products/n03.html",
+  "variants": [
+   {
+    "label": "猫眼石",
+    "image": null
+   }
+  ]
  }
 };

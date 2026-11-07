@@ -90,5 +90,69 @@ window.AURELLE_CATALOG = {
     "image": null
    }
   ]
+ },
+ "E04": {
+  "name": "Broqueles Micro Trébol",
+  "price": 10.17,
+  "image": "assets/img/products/E04/cover.jpg",
+  "url": "es/products/e04.html",
+  "variants": [
+   {
+    "label": "Baño de oro",
+    "image": null
+   },
+   {
+    "label": "Baño de rodio",
+    "image": null
+   }
+  ]
+ },
+ "H03": {
+  "name": "Anillo Volutas",
+  "price": 27.71,
+  "image": "assets/img/products/H03/cover.jpg",
+  "url": "es/products/h03.html",
+  "variants": [
+   {
+    "label": "Plata maciza S999",
+    "image": null
+   }
+  ]
+ },
+ "H04": {
+  "name": "Pulsera Hand Chain Trébol",
+  "price": 31.0,
+  "image": "assets/img/products/H04/cover.jpg",
+  "url": "es/products/h04.html",
+  "variants": [
+   {
+    "label": "Baño de oro",
+    "image": null
+   }
+  ]
+ },
+ "N02": {
+  "name": "Collar Trébol Turquesa",
+  "price": 27.43,
+  "image": "assets/img/products/N02/cover.jpg",
+  "url": "es/products/n02.html",
+  "variants": [
+   {
+    "label": "Baño de oro",
+    "image": null
+   }
+  ]
+ },
+ "N03": {
+  "name": "Collar Trébol Ojo de Gato",
+  "price": 34.29,
+  "image": "assets/img/products/N03/cover.jpg",
+  "url": "es/products/n03.html",
+  "variants": [
+   {
+    "label": "Ojo de gato",
+    "image": null
+   }
+  ]
  }
 };
